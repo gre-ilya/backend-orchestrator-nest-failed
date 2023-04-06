@@ -11,25 +11,19 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id Int @id @default(autoincrement())
 
-  email String @unique
-  hash  String
-
-  firstName String?
-  lastName  String?
+  email    String  @unique
+  hash     String
+  hashedRt String?
 
   apps UserApp[]
 
-  @@map("user")
+  @@map("users")
 }
 
 model UserApp {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id Int @id @default(autoincrement())
 
   repository String
   database   String
