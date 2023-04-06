@@ -72,8 +72,26 @@ export class AuthService {
     });
   }
 
-  async refreshToken(userId: number, refreshToken: string) {
+  async refreshTokens(userId: number, refreshToken: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user || !user.hashedRt) {
+      throw new ForbiddenException('Access denied');
+    }
+    const hash = await argon.hash(refreshToken);
+    console.log(hash);
+    console.log(user.hashedRt);
 
+    const tokensMatch = argon.verify(user.hashedRt, refreshToken);
+    if (!tokensMatch) {
+      throw new ForbiddenException('Access denied');
+    }
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.updateUserRtHash(user.id, tokens.refresh_token);
+    return tokens;
   }
 
   async updateUserRtHash(userId: number, refreshToken: string) {
