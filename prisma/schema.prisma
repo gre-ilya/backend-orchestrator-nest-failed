@@ -15,16 +15,19 @@ model User {
 
   email    String  @unique
   hash     String
-  hashedRt String?
+  password_hash String?
 
-  apps UserApp[]
+  jwt_tokens JwtToken[]
+  projects UserProject[]
 
   @@map("users")
 }
 
-model UserApp {
+model Project {
   id Int @id @default(autoincrement())
 
+  name String
+  variables String
   repository String
   database   String
 
