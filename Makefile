@@ -1,20 +1,19 @@
-start:
-	npm run start
+start: down build up
+
+down: 
+	docker compose down
+
+build:
+	docker compose build
+
+up:
+	docker compose up
 
 dev:
 	npm run start:dev
 
 lint:
 	npm run lint
-
-delete-db:
-	docker compose rm db -s -f -v
-
-run-db:
-	docker compose up db -d
-
-wait:
-	sleep 1
 
 migrate:
 	npx prisma migrate dev

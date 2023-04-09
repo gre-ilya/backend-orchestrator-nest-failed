@@ -1,13 +1,28 @@
 version: '3.8'
 services:
-  db:
-    image: 'postgres:13-bullseye'
-    ports:
-      - '5555:5432'
+  postgres:
+    image: 'postgres:13-alpine'
+    hostname: '${POSTGRES_HOST}'
+    #    ports:
+    #      - '${POSTGRES_PORT}:5432'
+    volumes:
+      - 'postgres_volume:/var/lib/postgresql/data'
     env_file:
       - './.env'
-    networks:
-      - 'db-network'
-networks:
-  db-network:
 
+  app-server:
+    build: '.'
+    volumes:
+      - "./:/workdir"
+    tty: true
+    depends_on:
+      - "postgres"
+    command: bash -c "/wait && npm run start:dev"
+    environment:
+      WAIT_HOSTS: "${POSTGRES_HOST}:5432"
+    env_file:
+      - ".env"
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+volumes:
+  postgres_volume:
