@@ -13,26 +13,47 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
 
-  email    String  @unique
-  hash     String
-  password_hash String?
+  email    String  @unique @db.VarChar(64)
+  password_hash     String @db.VarChar(256)
 
-  jwt_tokens JwtToken[]
-  projects UserProject[]
+  jwts Jwt[]
+  projects Project[]
 
   @@map("users")
 }
 
-model Project {
+model App {
   id Int @id @default(autoincrement())
 
-  name String
-  variables String
-  repository String
-  database   String
+  status String @db.VarChar(16)
+  build_logs String @db.VarChar(2048)
+  deploy_logs String @db.VarChar(2048)
 
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  project Project?
 
-  @@map("user apps")
+  @@map("apps")
+}
+
+model Jwt {
+  id Int @id @default(autoincrement())
+  access_hash String @db.VarChar(256)
+  refresh_hash String @db.VarChar(256)
+
+  user_id Int
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("jwts")
+}
+
+model Project {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(128)
+  variables Json
+
+  user_id Int
+  user   User @relation(fields: [user_id], references: [id])
+  app_id Int @unique
+  app App @relation(fields: [app_id], references: [id])
+
+  @@map("projects")
 }

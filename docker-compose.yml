@@ -22,5 +22,6 @@ services:
       - ".env"
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
+      - "5555:5555"
 volumes:
   postgres_volume:
