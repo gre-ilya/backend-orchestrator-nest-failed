@@ -28,8 +28,10 @@ model App {
   status      String @db.VarChar(16)
   build_logs  String @db.VarChar(2048)
   deploy_logs String @db.VarChar(2048)
+  ip          String @db.VarChar(16)
+  port        Int
 
-  project Project?
+  project Project
 
   @@map("apps")
 }
