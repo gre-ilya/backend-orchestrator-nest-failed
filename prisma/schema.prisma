@@ -13,10 +13,10 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
 
-  email    String  @unique @db.VarChar(64)
-  password_hash     String @db.VarChar(256)
+  email         String @unique @db.VarChar(64)
+  password_hash String @db.VarChar(256)
 
-  jwts Jwt[]
+  jwts     Jwt[]
   projects Project[]
 
   @@map("users")
@@ -25,8 +25,8 @@ model User {
 model App {
   id Int @id @default(autoincrement())
 
-  status String @db.VarChar(16)
-  build_logs String @db.VarChar(2048)
+  status      String @db.VarChar(16)
+  build_logs  String @db.VarChar(2048)
   deploy_logs String @db.VarChar(2048)
 
   project Project?
@@ -35,25 +35,25 @@ model App {
 }
 
 model Jwt {
-  id Int @id @default(autoincrement())
-  access_hash String @db.VarChar(256)
+  id           Int    @id @default(autoincrement())
+  access_hash  String @db.VarChar(256)
   refresh_hash String @db.VarChar(256)
 
   user_id Int
-  user User @relation(fields: [user_id], references: [id])
+  user    User @relation(fields: [user_id], references: [id])
 
   @@map("jwts")
 }
 
 model Project {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(128)
+  id        Int    @id @default(autoincrement())
+  name      String @db.VarChar(128)
   variables Json
 
   user_id Int
-  user   User @relation(fields: [user_id], references: [id])
-  app_id Int @unique
-  app App @relation(fields: [app_id], references: [id])
+  user    User @relation(fields: [user_id], references: [id])
+  app_id  Int  @unique
+  app     App  @relation(fields: [app_id], references: [id])
 
   @@map("projects")
 }
